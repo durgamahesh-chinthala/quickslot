@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../providers/auth_provider.dart';
 import '../providers/booking_provider.dart';
+import '../widgets/loading_indicator.dart';
+import '../widgets/error_view.dart';
+import '../theme.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -28,11 +31,14 @@ class _BookingsScreenState extends State<BookingsScreen> {
     return Consumer<BookingProvider>(
       builder: (context, bookingProvider, _) {
         if (bookingProvider.isLoadingBookings) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingIndicator(message: 'Loading bookings...');
         }
 
         if (bookingProvider.error != null) {
-          return Center(child: Text('Error: ${bookingProvider.error}'));
+          return ErrorView(message: 'Failed to load bookings: ${bookingProvider.error}', onRetry: () {
+            final user = context.read<AuthProvider>().currentUser;
+            if (user != null) bookingProvider.loadUserBookings(user.id);
+          });
         }
 
         if (bookingProvider.userBookings.isEmpty) {
@@ -45,16 +51,15 @@ class _BookingsScreenState extends State<BookingsScreen> {
           itemBuilder: (context, index) {
             final booking = bookingProvider.userBookings[index];
             return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
               child: ListTile(
-                title: Text(booking.venueName),
+                leading: const Icon(Icons.event_available, color: AppColors.primary),
+                title: Text(booking.venueName, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text(
                   '${DateFormat('MMM dd, HH:mm').format(booking.startTime)} - ${DateFormat('HH:mm').format(booking.endTime)}',
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () =>
-                      _showCancelDialog(context, booking.id, booking.slotId),
+                  onPressed: () => _showCancelDialog(context, booking.id, booking.slotId),
                 ),
               ),
             );

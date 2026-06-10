@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/venue_provider.dart';
 import 'venue_detail_screen.dart';
+import '../widgets/loading_indicator.dart';
+import '../widgets/error_view.dart';
+import '../theme.dart';
 
 class VenuesScreen extends StatefulWidget {
   const VenuesScreen({super.key});
@@ -24,23 +27,11 @@ class _VenuesScreenState extends State<VenuesScreen> {
     return Consumer<VenueProvider>(
       builder: (context, venueProvider, _) {
         if (venueProvider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingIndicator();
         }
 
         if (venueProvider.error != null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: ${venueProvider.error}'),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => venueProvider.loadVenues(),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          );
+          return ErrorView(message: 'Failed to load venues: ${venueProvider.error}', onRetry: () => venueProvider.loadVenues());
         }
 
         if (venueProvider.venues.isEmpty) {
@@ -52,11 +43,14 @@ class _VenuesScreenState extends State<VenuesScreen> {
           itemBuilder: (context, index) {
             final venue = venueProvider.venues[index];
             return Card(
-              margin: const EdgeInsets.all(8),
               child: ListTile(
-                title: Text(venue.name),
+                leading: CircleAvatar(
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                  child: const Icon(Icons.sports_tennis, color: AppColors.primary),
+                ),
+                title: Text(venue.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text(venue.location),
-                trailing: Text('⭐ ${venue.rating}'),
+                trailing: Chip(label: Text('⭐ ${venue.rating}')),
                 onTap: () {
                   Navigator.push(
                     context,

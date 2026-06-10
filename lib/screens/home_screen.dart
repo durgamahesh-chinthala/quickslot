@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'venues_screen.dart';
 import 'bookings_screen.dart';
+import '../theme.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, ${user?.name}!'),
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppColors.accent,
+              child: Text(user?.name.substring(0, 1) ?? '', style: const TextStyle(color: Colors.white)),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Hi, ${user?.name ?? 'Guest'}!', style: const TextStyle(fontSize: 16)),
+                const Text('Find and book slots', style: TextStyle(fontSize: 12)),
+              ],
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -28,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: [const VenuesScreen(), const BookingsScreen()][_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [VenuesScreen(), BookingsScreen()],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),

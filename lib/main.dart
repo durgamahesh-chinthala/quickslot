@@ -7,6 +7,7 @@ import 'providers/venue_provider.dart';
 import 'providers/booking_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +28,8 @@ class QuickSlotApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'QuickSlot',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
+        debugShowCheckedModeBanner: false,
+        theme: appTheme,
         home: Consumer<AuthProvider>(
           builder: (context, authProvider, _) {
             return authProvider.currentUser == null

@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import '../models/venue.dart';
 import '../providers/booking_provider.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/loading_indicator.dart';
+import '../widgets/error_view.dart';
+import '../widgets/slot_tile.dart';
 
 class VenueDetailScreen extends StatefulWidget {
   final Venue venue;
@@ -65,7 +68,9 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                   'Select Date:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                ElevatedButton(
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(DateFormat('MMM dd, yyyy').format(selectedDate)),
                   onPressed: () async {
                     final picked = await showDatePicker(
                       context: context,
@@ -78,7 +83,6 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                       _loadSlots();
                     }
                   },
-                  child: Text(DateFormat('MMM dd, yyyy').format(selectedDate)),
                 ),
               ],
             ),
@@ -88,11 +92,11 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
             child: Consumer<BookingProvider>(
               builder: (context, bookingProvider, _) {
                 if (bookingProvider.isLoadingSlots) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const LoadingIndicator(message: 'Loading slots...');
                 }
 
                 if (bookingProvider.error != null) {
-                  return Center(child: Text('Error: ${bookingProvider.error}'));
+                  return ErrorView(message: 'Failed to load slots: ${bookingProvider.error}', onRetry: _loadSlots);
                 }
 
                 if (bookingProvider.currentSlots.isEmpty) {
@@ -100,51 +104,22 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                 }
 
                 return GridView.builder(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(12),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
+                    childAspectRatio: 0.9,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
                   itemCount: bookingProvider.currentSlots.length,
                   itemBuilder: (context, index) {
                     final slot = bookingProvider.currentSlots[index];
                     final time = DateFormat('HH:mm').format(slot.startTime);
 
-                    return GestureDetector(
-                      onTap: slot.isBooked
-                          ? null
-                          : () => _showBookingConfirmation(
-                              context,
-                              slot,
-                              user!.id,
-                            ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: slot.isBooked ? Colors.red : Colors.green,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              time,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              slot.isBooked ? 'Booked' : 'Available',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    return SlotTile(
+                      timeLabel: time,
+                      isBooked: slot.isBooked,
+                      onTap: () => _showBookingConfirmation(context, slot, user!.id),
                     );
                   },
                 );
