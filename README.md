@@ -62,7 +62,7 @@ service cloud.firestore {
 
 ### 3. Run the App
 ```bash
-cd my_test_application
+cd quickslot
 flutter pub get
 flutter run
 ```

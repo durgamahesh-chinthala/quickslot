@@ -178,14 +178,21 @@ abstract class AppColors {
 // Minimal spacing helper used by theme
 class MBSpacing {
   static const EdgeInsets zero = EdgeInsets.zero;
-  static EdgeInsets fromLTRB(double l, double t, double r, double b) => EdgeInsets.fromLTRB(l, t, r, b);
+  static EdgeInsets fromLTRB(double l, double t, double r, double b) =>
+      EdgeInsets.fromLTRB(l, t, r, b);
 }
 
 class ValueConstants {
   static const BORDER_RADIUS_6 = 6.0;
   static const BORDER_RADIUS_12 = 12.0;
-  static const PADDING_X24_Y12 = EdgeInsets.symmetric(horizontal: 24, vertical: 12);
-  static const PADDING_X24_Y40 = EdgeInsets.symmetric(horizontal: 24, vertical: 40);
+  static const PADDING_X24_Y12 = EdgeInsets.symmetric(
+    horizontal: 24,
+    vertical: 12,
+  );
+  static const PADDING_X24_Y40 = EdgeInsets.symmetric(
+    horizontal: 24,
+    vertical: 40,
+  );
   static const HEIGHT_XL = SizedBox(height: 24);
   static const HEIGHT_MEDIUM = SizedBox(height: 12);
   static const HEIGHT_XXL = SizedBox(height: 32);
@@ -208,12 +215,17 @@ abstract class AppTheme {
         secondary: AppColors.NEUTRAL_200,
         error: AppColors.ERROR,
       ),
-      appBarTheme: base.appBarTheme.copyWith(backgroundColor: AppColors.PRIMARY_600, foregroundColor: AppColors.WHITE_COLOR),
+      appBarTheme: base.appBarTheme.copyWith(
+        backgroundColor: AppColors.PRIMARY_600,
+        foregroundColor: AppColors.WHITE_COLOR,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.PRIMARY_600,
           foregroundColor: AppColors.WHITE_COLOR,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ValueConstants.BORDER_RADIUS_6)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ValueConstants.BORDER_RADIUS_6),
+          ),
           padding: ValueConstants.PADDING_X24_Y12,
         ),
       ),
@@ -226,8 +238,14 @@ abstract class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: MBSpacing.fromLTRB(12, 12, 10, 12),
         isDense: true,
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: BorderSide(color: AppColors.NEUTRAL_300)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: BorderSide(color: AppColors.PRIMARY_600)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColors.NEUTRAL_300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColors.PRIMARY_600),
+        ),
       ),
     );
   }

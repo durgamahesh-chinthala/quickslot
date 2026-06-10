@@ -1,4 +1,4 @@
-package com.example.my_test_application
+package com.example.quickslot
 
 import io.flutter.embedding.android.FlutterActivity
 
