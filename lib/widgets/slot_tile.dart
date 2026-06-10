@@ -5,11 +5,18 @@ class SlotTile extends StatelessWidget {
   final bool isBooked;
   final VoidCallback? onTap;
 
-  const SlotTile({super.key, required this.timeLabel, required this.isBooked, this.onTap});
+  const SlotTile({
+    super.key,
+    required this.timeLabel,
+    required this.isBooked,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bg = isBooked ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor;
+    final bg = isBooked
+        ? Theme.of(context).colorScheme.error
+        : Theme.of(context).primaryColor;
     return Material(
       color: bg,
       borderRadius: BorderRadius.circular(10),
@@ -25,10 +32,16 @@ class SlotTile extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 timeLabel,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
-              Text(isBooked ? 'Booked' : 'Available', style: const TextStyle(color: Colors.white70, fontSize: 12)),
+              Text(
+                isBooked ? 'Booked' : 'Available',
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
             ],
           ),
         ),

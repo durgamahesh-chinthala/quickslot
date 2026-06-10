@@ -24,15 +24,24 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundColor: AppColors.accent,
-              child: Text(user?.name.substring(0, 1) ?? '', style: const TextStyle(color: Colors.white)),
+              backgroundColor: AppColors.SECONDARY_COLOR,
+              child: Text(
+                user?.name.substring(0, 1) ?? '',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Hi, ${user?.name ?? 'Guest'}!', style: const TextStyle(fontSize: 16)),
-                const Text('Find and book slots', style: TextStyle(fontSize: 12)),
+                Text(
+                  'Hi, ${user?.name ?? 'Guest'}!',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const Text(
+                  'Find and book slots',
+                  style: TextStyle(fontSize: 12),
+                ),
               ],
             ),
           ],

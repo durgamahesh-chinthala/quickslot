@@ -35,10 +35,13 @@ class _BookingsScreenState extends State<BookingsScreen> {
         }
 
         if (bookingProvider.error != null) {
-          return ErrorView(message: 'Failed to load bookings: ${bookingProvider.error}', onRetry: () {
-            final user = context.read<AuthProvider>().currentUser;
-            if (user != null) bookingProvider.loadUserBookings(user.id);
-          });
+          return ErrorView(
+            message: 'Failed to load bookings: ${bookingProvider.error}',
+            onRetry: () {
+              final user = context.read<AuthProvider>().currentUser;
+              if (user != null) bookingProvider.loadUserBookings(user.id);
+            },
+          );
         }
 
         if (bookingProvider.userBookings.isEmpty) {
@@ -52,14 +55,21 @@ class _BookingsScreenState extends State<BookingsScreen> {
             final booking = bookingProvider.userBookings[index];
             return Card(
               child: ListTile(
-                leading: const Icon(Icons.event_available, color: AppColors.primary),
-                title: Text(booking.venueName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                leading: const Icon(
+                  Icons.event_available,
+                  color: AppColors.PRIMARY_600,
+                ),
+                title: Text(
+                  booking.venueName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text(
                   '${DateFormat('MMM dd, HH:mm').format(booking.startTime)} - ${DateFormat('HH:mm').format(booking.endTime)}',
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _showCancelDialog(context, booking.id, booking.slotId),
+                  onPressed: () =>
+                      _showCancelDialog(context, booking.id, booking.slotId),
                 ),
               ),
             );

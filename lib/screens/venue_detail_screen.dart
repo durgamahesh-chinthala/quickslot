@@ -96,7 +96,10 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                 }
 
                 if (bookingProvider.error != null) {
-                  return ErrorView(message: 'Failed to load slots: ${bookingProvider.error}', onRetry: _loadSlots);
+                  return ErrorView(
+                    message: 'Failed to load slots: ${bookingProvider.error}',
+                    onRetry: _loadSlots,
+                  );
                 }
 
                 if (bookingProvider.currentSlots.isEmpty) {
@@ -119,7 +122,8 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                     return SlotTile(
                       timeLabel: time,
                       isBooked: slot.isBooked,
-                      onTap: () => _showBookingConfirmation(context, slot, user!.id),
+                      onTap: () =>
+                          _showBookingConfirmation(context, slot, user!.id),
                     );
                   },
                 );

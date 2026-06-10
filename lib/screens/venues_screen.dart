@@ -31,7 +31,10 @@ class _VenuesScreenState extends State<VenuesScreen> {
         }
 
         if (venueProvider.error != null) {
-          return ErrorView(message: 'Failed to load venues: ${venueProvider.error}', onRetry: () => venueProvider.loadVenues());
+          return ErrorView(
+            message: 'Failed to load venues: ${venueProvider.error}',
+            onRetry: () => venueProvider.loadVenues(),
+          );
         }
 
         if (venueProvider.venues.isEmpty) {
@@ -45,10 +48,18 @@ class _VenuesScreenState extends State<VenuesScreen> {
             return Card(
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                  child: const Icon(Icons.sports_tennis, color: AppColors.primary),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).primaryColor.withOpacity(0.1),
+                  child: const Icon(
+                    Icons.sports_tennis,
+                    color: AppColors.PRIMARY_600,
+                  ),
                 ),
-                title: Text(venue.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(
+                  venue.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text(venue.location),
                 trailing: Chip(label: Text('⭐ ${venue.rating}')),
                 onTap: () {

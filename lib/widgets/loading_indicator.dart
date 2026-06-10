@@ -14,7 +14,7 @@ class LoadingIndicator extends StatelessWidget {
           if (message != null) ...[
             const SizedBox(height: 12),
             Text(message!, style: Theme.of(context).textTheme.bodySmall),
-          ]
+          ],
         ],
       ),
     );
