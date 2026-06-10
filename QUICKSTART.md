@@ -50,7 +50,7 @@ BookingProvider → Slots for date + user bookings
 
 **1. Verify setup:**
 ```bash
-cd /Users/durgamahesh.chinthala/Desktop/hackathon_exam/my_test_application
+cd /Users/durgamahesh.chinthala/Desktop/hackathon_exam/quickslot
 bash check.sh
 ```
 
@@ -148,7 +148,7 @@ await _firestore.runTransaction((transaction) async {
 ## 📁 File Structure
 
 ```
-my_test_application/
+quickslot/
 ├── pubspec.yaml                    ← Firebase + Provider dependencies
 ├── lib/
 │   ├── main.dart                   ← App entry + MultiProvider

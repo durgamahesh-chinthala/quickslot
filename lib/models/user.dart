@@ -5,10 +5,7 @@ class User {
   User({required this.id, required this.name});
 
   factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'] as String,
-      name: map['name'] as String,
-    );
+    return User(id: map['id'] as String, name: map['name'] as String);
   }
 
   Map<String, dynamic> toMap() => {'id': id, 'name': name};

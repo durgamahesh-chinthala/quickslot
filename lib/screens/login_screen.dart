@@ -15,7 +15,10 @@ class LoginScreen extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Select User', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Select User',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 30),
                 ...authProvider.getAvailableUsers().map((user) {
                   return Padding(
@@ -23,9 +26,15 @@ class LoginScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => authProvider.login(user['id']!),
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 15,
+                        ),
                       ),
-                      child: Text(user['name']!, style: const TextStyle(fontSize: 16)),
+                      child: Text(
+                        user['name']!,
+                        style: const TextStyle(fontSize: 16),
+                      ),
                     ),
                   );
                 }).toList(),

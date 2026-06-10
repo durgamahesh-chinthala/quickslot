@@ -28,16 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: [
-        const VenuesScreen(),
-        const BookingsScreen(),
-      ][_currentIndex],
+      body: [const VenuesScreen(), const BookingsScreen()][_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Venues'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'My Bookings'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Venues',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'My Bookings',
+          ),
         ],
       ),
     );

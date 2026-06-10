@@ -7,7 +7,9 @@ class VenueService {
   Future<List<Venue>> getVenues() async {
     try {
       final snapshot = await _firestore.collection('venues').get();
-      return snapshot.docs.map((doc) => Venue.fromMap({...doc.data(), 'id': doc.id})).toList();
+      return snapshot.docs
+          .map((doc) => Venue.fromMap({...doc.data(), 'id': doc.id}))
+          .toList();
     } catch (e) {
       throw 'Failed to fetch venues: $e';
     }
@@ -31,9 +33,24 @@ class VenueService {
       if (venues.docs.isNotEmpty) return; // Already seeded
 
       final List<Map<String, dynamic>> venuesList = [
-        {'name': 'Court A', 'location': 'Downtown', 'imageUrl': '', 'rating': 4.5},
-        {'name': 'Court B', 'location': 'Midtown', 'imageUrl': '', 'rating': 4.2},
-        {'name': 'Court C', 'location': 'Uptown', 'imageUrl': '', 'rating': 4.8},
+        {
+          'name': 'Court A',
+          'location': 'Downtown',
+          'imageUrl': '',
+          'rating': 4.5,
+        },
+        {
+          'name': 'Court B',
+          'location': 'Midtown',
+          'imageUrl': '',
+          'rating': 4.2,
+        },
+        {
+          'name': 'Court C',
+          'location': 'Uptown',
+          'imageUrl': '',
+          'rating': 4.8,
+        },
       ];
 
       for (var venue in venuesList) {

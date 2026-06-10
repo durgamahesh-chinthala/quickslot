@@ -16,7 +16,7 @@ class BookingService {
   }) async {
     try {
       String? bookingId;
-      
+
       // Use transaction for atomic operation - prevents double-booking
       await _firestore.runTransaction((transaction) async {
         final slotRef = _firestore.collection('slots').doc(slotId);
@@ -74,7 +74,9 @@ class BookingService {
           .orderBy('startTime', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id})).toList();
+      return snapshot.docs
+          .map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id}))
+          .toList();
     } catch (e) {
       throw 'Failed to fetch bookings: $e';
     }
@@ -84,10 +86,10 @@ class BookingService {
     try {
       await _firestore.runTransaction((transaction) async {
         transaction.delete(_firestore.collection('bookings').doc(bookingId));
-        transaction.update(
-          _firestore.collection('slots').doc(slotId),
-          {'isBooked': false, 'bookedByUserId': null},
-        );
+        transaction.update(_firestore.collection('slots').doc(slotId), {
+          'isBooked': false,
+          'bookedByUserId': null,
+        });
       });
     } catch (e) {
       throw 'Failed to cancel booking: $e';
@@ -100,7 +102,10 @@ class BookingService {
         .where('userId', isEqualTo: userId)
         .orderBy('startTime', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id})).toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id}))
+              .toList(),
+        );
   }
 }

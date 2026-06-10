@@ -53,7 +53,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _showCancelDialog(context, booking.id, booking.slotId),
+                  onPressed: () =>
+                      _showCancelDialog(context, booking.id, booking.slotId),
                 ),
               ),
             );
@@ -63,14 +64,21 @@ class _BookingsScreenState extends State<BookingsScreen> {
     );
   }
 
-  void _showCancelDialog(BuildContext context, String bookingId, String slotId) {
+  void _showCancelDialog(
+    BuildContext context,
+    String bookingId,
+    String slotId,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Cancel Booking'),
         content: const Text('Are you sure you want to cancel this booking?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('No')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('No'),
+          ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);

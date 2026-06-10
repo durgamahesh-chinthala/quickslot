@@ -41,8 +41,17 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.venue.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                Text(widget.venue.location, style: TextStyle(color: Colors.grey[600])),
+                Text(
+                  widget.venue.name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  widget.venue.location,
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
                 const SizedBox(height: 20),
               ],
             ),
@@ -52,7 +61,10 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Select Date:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Select Date:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     final picked = await showDatePicker(
@@ -103,7 +115,11 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                     return GestureDetector(
                       onTap: slot.isBooked
                           ? null
-                          : () => _showBookingConfirmation(context, slot, user!.id),
+                          : () => _showBookingConfirmation(
+                              context,
+                              slot,
+                              user!.id,
+                            ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: slot.isBooked ? Colors.red : Colors.green,
@@ -112,10 +128,19 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(time, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            Text(
+                              time,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Text(
                               slot.isBooked ? 'Booked' : 'Available',
-                              style: const TextStyle(color: Colors.white, fontSize: 12),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
@@ -131,14 +156,23 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
     );
   }
 
-  void _showBookingConfirmation(BuildContext context, dynamic slot, String userId) {
+  void _showBookingConfirmation(
+    BuildContext context,
+    dynamic slot,
+    String userId,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Confirm Booking'),
-        content: Text('Book slot from ${DateFormat('HH:mm').format(slot.startTime)} to ${DateFormat('HH:mm').format(slot.endTime)}?'),
+        content: Text(
+          'Book slot from ${DateFormat('HH:mm').format(slot.startTime)} to ${DateFormat('HH:mm').format(slot.endTime)}?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -151,7 +185,11 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
     );
   }
 
-  Future<void> _performBooking(BuildContext context, dynamic slot, String userId) async {
+  Future<void> _performBooking(
+    BuildContext context,
+    dynamic slot,
+    String userId,
+  ) async {
     final bookingProvider = context.read<BookingProvider>();
     final success = await bookingProvider.bookSlot(
       userId: userId,
@@ -166,11 +204,17 @@ class _VenueDetailScreenState extends State<VenueDetailScreen> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Booking successful!'), backgroundColor: Colors.green),
+        const SnackBar(
+          content: Text('Booking successful!'),
+          backgroundColor: Colors.green,
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(bookingProvider.bookingError ?? 'Booking failed'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(bookingProvider.bookingError ?? 'Booking failed'),
+          backgroundColor: Colors.red,
+        ),
       );
       bookingProvider.clearBookingError();
     }

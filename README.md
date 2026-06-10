@@ -29,9 +29,6 @@ A Flutter app for booking sports venues with **concurrency-safe double-booking p
 ## Setup
 
 ### Prerequisites
-- Flutter 3.11+
-- Firebase project (enable Firestore)
-- Android emulator or device
 
 ### 1. Firebase Setup
 ```bash
@@ -109,13 +106,6 @@ Firestore ensures **only one transaction commits**. The second attempt gets a cl
 
 ## What's Included
 
-- ✅ Full Firebase Firestore backend
-- ✅ Concurrency-safe booking via transactions
-- ✅ Provider state management (3 providers)
-- ✅ 5 screens (Login, Home, Venues, Detail, Bookings)
-- ✅ Date picker for slots
-- ✅ Cancel bookings
-- ✅ Error/Loading/Empty states
 
 ## What's Cut (and Why)
 
@@ -165,10 +155,6 @@ lib/
 ## AI Usage Note
 
 **What Claude Helped With**:
-- Transaction-based concurrency pattern for double-booking prevention
-- Provider state management architecture
-- Firestore query optimization
-- Error handling patterns
 
 **What I Caught & Fixed**:
 1. **Bug**: Slot grid didn't refresh after failed booking → Added manual slot state update in BookingProvider
@@ -187,11 +173,6 @@ lib/
 
 ## Why Provider State Management
 
-- **Simple**: Less boilerplate than Bloc
-- **Performant**: Fine-grained rebuilds with `Consumer`
-- **Justifiable**: Easy to explain under pressure in defense round
-- **Industry standard**: Used at Google, Microsoft, Meta
-- **Flexible**: Works for both small and large apps
 
 ## Commits
 
@@ -217,5 +198,4 @@ Every 45 mins during build:
 **Slots don't seed**
 → They seed on first venue access. Navigate to a venue to trigger.
 
----
 Built for QuickSlot Hackathon | Provider + Firebase | Concurrency-safe ✨

@@ -1,6 +1,6 @@
 {
-    "name": "my_test_application",
-    "short_name": "my_test_application",
+    "name": "QuickSlot",
+    "short_name": "QuickSlot",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

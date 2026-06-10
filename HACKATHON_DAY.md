@@ -5,7 +5,7 @@
 Assuming Firebase is already configured (see SETUP.md):
 
 ```bash
-cd my_test_application
+cd quickslot
 flutter clean
 flutter pub get
 flutter run

@@ -91,7 +91,7 @@ flutterfire configure \
 ## 6. Verify Setup
 
 ```bash
-cd my_test_application
+cd quickslot
 flutter clean
 flutter pub get
 flutter run
