@@ -29,7 +29,7 @@ class QuickSlotApp extends StatelessWidget {
       child: MaterialApp(
         title: 'QuickSlot',
         debugShowCheckedModeBanner: false,
-        theme: appTheme,
+        theme: AppTheme.kLightTheme(),
         home: Consumer<AuthProvider>(
           builder: (context, authProvider, _) {
             return authProvider.currentUser == null
