@@ -1,0 +1,9 @@
+{
+    "dart.flutterSdkPath": "/Users/durgamahesh.chinthala/Desktop/studio_projects/sayukth_repo/Quikvest-webapp/.fvm/versions/3.29.3",
+    "chat.tools.terminal.autoApprove": {
+        "/^git add -A && git commit -m \"🚀 Initial QuickSlot project scaffold: models, services, providers, screens\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

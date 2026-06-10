@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Venues: public read
+    match /venues/{venueId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Slots: public read, transaction writes only
+    match /slots/{slotId} {
+      allow read: if true;
+      allow write: if false; // Firestore transactions only
+    }
+
+    // Bookings: authenticated users
+    match /bookings/{bookingId} {
+      allow read, write: if true; // For hackathon demo
+    }
+  }
+}
