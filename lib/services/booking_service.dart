@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:quickslot/core/network/services/network_api_service.dart';
 import '../models/booking.dart';
 
 class BookingService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _api = NetworkApiService();
 
-  /// Concurrency-safe booking using Firestore transactions
-  /// Returns booking ID on success, throws specific error on conflict
+  /// Book a slot via REST API. Returns slot id if success.
   Future<String> bookSlot({
     required String userId,
     required String venueId,
@@ -15,97 +15,76 @@ class BookingService {
     required DateTime endTime,
   }) async {
     try {
-      String? bookingId;
-
-      // Use transaction for atomic operation - prevents double-booking
-      await _firestore.runTransaction((transaction) async {
-        final slotRef = _firestore.collection('slots').doc(slotId);
-        final slotDoc = await transaction.get(slotRef);
-
-        if (!slotDoc.exists) {
-          throw 'Slot not found';
-        }
-
-        final isBooked = slotDoc['isBooked'] as bool;
-        if (isBooked) {
-          throw 'SLOT_ALREADY_BOOKED'; // Specific error for UI handling
-        }
-
-        // Create booking
-        final bookingRef = _firestore.collection('bookings').doc();
-        bookingId = bookingRef.id;
-
-        transaction.set(bookingRef, {
-          'userId': userId,
-          'venueId': venueId,
+      final dio = _api.dio;
+      final resp = await dio.post(
+        '/api/bookings',
+        data: {
           'slotId': slotId,
-          'bookedAt': DateTime.now().toIso8601String(),
+          'venueId': venueId,
+          'venueName': venueName,
           'startTime': startTime.toIso8601String(),
           'endTime': endTime.toIso8601String(),
-          'venueName': venueName,
-        });
+          'userId': userId,
+        },
+        options: Options(headers: {'X-User-Id': userId}),
+      );
 
-        // Mark slot as booked
-        transaction.update(slotRef, {
-          'isBooked': true,
-          'bookedByUserId': userId,
-        });
-      });
+      if (resp.statusCode == 200) {
+        return resp.data['id']?.toString() ?? slotId;
+      } else if (resp.statusCode == 409) {
+        throw 'This slot was just booked. Please refresh and try another.';
+      } else if (resp.statusCode == 404) {
+        throw 'Slot not found.';
+      }
 
-      return bookingId!;
-    } on FirebaseException catch (e) {
-      if (e.message?.contains('SLOT_ALREADY_BOOKED') ?? false) {
+      throw 'Booking failed: ${resp.statusMessage}';
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 409) {
         throw 'This slot was just booked. Please refresh and try another.';
       }
-      throw 'Booking failed: ${e.message}';
+      rethrow;
     } catch (e) {
-      if (e.toString().contains('SLOT_ALREADY_BOOKED')) {
-        throw 'This slot was just booked. Please refresh and try another.';
-      }
-      throw 'Booking failed: $e';
+      rethrow;
     }
   }
 
   Future<List<Booking>> getUserBookings(String userId) async {
     try {
-      final snapshot = await _firestore
-          .collection('bookings')
-          .where('userId', isEqualTo: userId)
-          .orderBy('startTime', descending: true)
-          .get();
+      final dio = _api.dio;
+      final resp = await dio.get(
+        '/api/bookings/user/$userId',
+        options: Options(headers: {'X-User-Id': userId}),
+      );
 
-      return snapshot.docs
-          .map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id}))
-          .toList();
+      if (resp.statusCode == 200) {
+        final List<dynamic> data = resp.data as List<dynamic>;
+        return data
+            .map((e) => Booking.fromMap(Map<String, dynamic>.from(e)))
+            .toList();
+      }
+      throw 'Failed to fetch bookings';
     } catch (e) {
-      throw 'Failed to fetch bookings: $e';
+      rethrow;
     }
   }
 
-  Future<void> cancelBooking(String bookingId, String slotId) async {
+  Future<void> cancelBooking(String slotId, String userId) async {
     try {
-      await _firestore.runTransaction((transaction) async {
-        transaction.delete(_firestore.collection('bookings').doc(bookingId));
-        transaction.update(_firestore.collection('slots').doc(slotId), {
-          'isBooked': false,
-          'bookedByUserId': null,
-        });
-      });
+      final dio = _api.dio;
+      final resp = await dio.delete(
+        '/api/bookings/$slotId',
+        data: {'userId': userId},
+        options: Options(headers: {'X-User-Id': userId}),
+      );
+      if (resp.statusCode == 200) return;
+      throw 'Failed to cancel booking';
     } catch (e) {
-      throw 'Failed to cancel booking: $e';
+      rethrow;
     }
   }
 
-  Stream<List<Booking>> getUserBookingsStream(String userId) {
-    return _firestore
-        .collection('bookings')
-        .where('userId', isEqualTo: userId)
-        .orderBy('startTime', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => Booking.fromMap({...doc.data(), 'id': doc.id}))
-              .toList(),
-        );
+  // Streaming via REST is not supported; clients should poll or use websockets.
+  Stream<List<Booking>> getUserBookingsStream(String userId) async* {
+    yield await getUserBookings(userId);
   }
 }

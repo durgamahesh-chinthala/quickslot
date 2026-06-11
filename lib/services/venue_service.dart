@@ -1,15 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
+import 'package:quickslot/core/network/services/network_api_service.dart';
+import 'package:quickslot/core/network/config/api_end_points.dart';
 import '../models/venue.dart';
 
 class VenueService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NetworkApiService _api = NetworkApiService();
 
+  /// Fetches venue list from server
   Future<List<Venue>> getVenues() async {
     try {
-      final snapshot = await _firestore.collection('venues').get();
-      return snapshot.docs
-          .map((doc) => Venue.fromMap({...doc.data(), 'id': doc.id}))
-          .toList();
+      final resp = await _api.getRequest(ApiEndPoints.URI_VENUES);
+      if (resp is Map || resp is List) {
+        final data = resp is String ? jsonDecode(resp) : resp;
+        final list = data is List ? data : [];
+        return list.map<Venue>((e) {
+          final map = Map<String, dynamic>.from(e);
+          map['id'] = map['id']?.toString();
+          map['imageUrl'] = map['imageUrl'] ?? '';
+          return Venue.fromMap(map);
+        }).toList();
+      } else if (resp is dynamic && resp.data != null) {
+        final data = resp.data is String ? jsonDecode(resp.data) : resp.data;
+        final list = data is List ? data : [];
+        return list.map<Venue>((e) {
+          final map = Map<String, dynamic>.from(e);
+          map['id'] = map['id']?.toString();
+          map['imageUrl'] = map['imageUrl'] ?? '';
+          return Venue.fromMap(map);
+        }).toList();
+      }
+      return [];
     } catch (e) {
       throw 'Failed to fetch venues: $e';
     }
@@ -17,9 +38,13 @@ class VenueService {
 
   Future<Venue?> getVenue(String venueId) async {
     try {
-      final doc = await _firestore.collection('venues').doc(venueId).get();
-      if (doc.exists) {
-        return Venue.fromMap({...doc.data()!, 'id': doc.id});
+      final resp = await _api.getRequest('${ApiEndPoints.URI_VENUES}/$venueId');
+      if (resp is dynamic && resp.data != null) {
+        final data = resp.data is String ? jsonDecode(resp.data) : resp.data;
+        final map = Map<String, dynamic>.from(data);
+        map['id'] = map['id']?.toString();
+        map['imageUrl'] = map['imageUrl'] ?? '';
+        return Venue.fromMap(map);
       }
       return null;
     } catch (e) {
@@ -27,37 +52,8 @@ class VenueService {
     }
   }
 
+  /// No-op for seeding in client; server is responsible for seeding
   Future<void> seedVenues() async {
-    try {
-      final venues = await _firestore.collection('venues').get();
-      if (venues.docs.isNotEmpty) return; // Already seeded
-
-      final List<Map<String, dynamic>> venuesList = [
-        {
-          'name': 'Court A',
-          'location': 'Downtown',
-          'imageUrl': '',
-          'rating': 4.5,
-        },
-        {
-          'name': 'Court B',
-          'location': 'Midtown',
-          'imageUrl': '',
-          'rating': 4.2,
-        },
-        {
-          'name': 'Court C',
-          'location': 'Uptown',
-          'imageUrl': '',
-          'rating': 4.8,
-        },
-      ];
-
-      for (var venue in venuesList) {
-        await _firestore.collection('venues').add(venue);
-      }
-    } catch (e) {
-      throw 'Failed to seed venues: $e';
-    }
+    return;
   }
 }

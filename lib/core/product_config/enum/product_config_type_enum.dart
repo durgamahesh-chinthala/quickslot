@@ -1,0 +1,6 @@
+enum ProductConfigTypeEnum {
+  ONE_SHOT_NO_KYC,
+  ONE_SHOT_WITH_KYC,
+  MULTI_SHOT_KYC,
+  MULTI_SHOT_NO_KYC,
+}
